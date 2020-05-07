@@ -2,13 +2,29 @@ package com;
 
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
+import org.jnativehook.mouse.NativeMouseWheelEvent;
+import org.jnativehook.mouse.NativeMouseWheelListener;
+
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 
-public class GlobalMouseL implements NativeMouseInputListener {
-
+public class GlobalMouseL implements NativeMouseInputListener, MouseWheelListener, NativeMouseWheelListener {
+    //the default timing in Windows is 500 ms (half a second).
     private int x=0;
     private int y=0;
     private int clk=0;
+    private int button=0;
+    private int ringRotated=0;
+
+    public void setRingRotated(int ringRotated) {
+        this.ringRotated = ringRotated;
+    }
+
+    public void setButton(int button) {
+        this.button = button;
+    }
 
     public void setClk(int clk) {
         this.clk = clk;
@@ -29,6 +45,14 @@ public class GlobalMouseL implements NativeMouseInputListener {
         return y;
     }
 
+    public int getRingRotated() {
+        return ringRotated;
+    }
+
+    public int getButton() {
+        return button;
+    }
+
     @Override
     public void nativeMouseClicked(NativeMouseEvent e) {
        setClk(e.getClickCount());
@@ -38,7 +62,8 @@ public class GlobalMouseL implements NativeMouseInputListener {
 
     @Override
     public void nativeMousePressed(NativeMouseEvent e) {
-       // System.out.println("Mouse Pressed: " + e.getButton());
+        setButton(e.getButton());
+      //  System.out.println("Mouse Pressed: " + e.getButton());
     }
 
     @Override
@@ -58,4 +83,14 @@ public class GlobalMouseL implements NativeMouseInputListener {
         //System.out.println("Mouse Dragged: " + e.getX() + ", " + e.getY());
     }
 
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+      //  System.out.println("Mosue : " + e.getScrollType());
+    }
+
+    @Override
+    public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
+        setRingRotated(e.getWheelRotation());
+      //  System.out.println("Mosue Wheel Moved: " + e.getWheelRotation());
+    }
 }
